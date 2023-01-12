@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,6 +36,21 @@ var (
 		"CreatedDate":	""
 	}`
 )
+
+func GetEnv() (appName string) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("INFO: unable to load .env file")
+	}
+
+	appName, ok := os.LookupEnv("APP_NAME")
+	if ok != true || appName == "" {
+		log.Println("INFO: APP_NAME not set in environment; defaulting to log")
+		appName = "log"
+	}
+
+	return
+}
 
 func TestCreateUser(t *testing.T) {
 	// Setup
